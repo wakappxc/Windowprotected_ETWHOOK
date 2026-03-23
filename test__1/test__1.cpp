@@ -12,7 +12,7 @@ int main()
 		HWND findHwnd = FindWindowA("dbgviewClass", NULL);
 		printf("findHwnd = %x\r\n", findHwnd);
 
-		HWND queryhwnd = (HWND)0x0007003A;
+		HWND queryhwnd = (HWND)0x00020396;//4444
 
 		DWORD pid = 0, tid = 0;
 		tid = GetWindowThreadProcessId(queryhwnd, &pid);

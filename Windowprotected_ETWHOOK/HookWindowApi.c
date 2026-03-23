@@ -133,10 +133,10 @@ int GetUserGetForegroundWindowIndex()
 	static int index = -1;
 	if (index != -1) return index;
 
-	ULONG number = GetWindowsVersionNumber();
+	ULONG number = GetWindowsVersionNumber();//获取windows版本号
 	char * FuncName = NULL;
 
-	if (number == 7)
+	if (number == 7)//根据版本号获取名字
 	{
 		FuncName = "GetForegroundWindow";
 	}
