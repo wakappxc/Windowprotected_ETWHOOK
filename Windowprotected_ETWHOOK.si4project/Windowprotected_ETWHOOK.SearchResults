@@ -1,0 +1,87 @@
+---- etw Matches (105 in 11 files) ----
+EtwControl.c (Etw\etw) line 1 : #include "EtwControl.h"
+EtwControl.c (Etw\etw) line 65 : 	ULONG number = GetWindowsVersionNumberEtw();
+EtwControl.c (Etw\etw) line 79 : 	ULONG number = GetWindowsVersionNumberEtw();
+img.c (Etw\etw) line 163 : 	NTSTATUS status = GetNtModuleBaseAndSizeEtw(&kernelBase,&kernelSize);
+infinityhook.c (Etw\etw) line 27 : #include "EtwControl.h"
+infinityhook.c (Etw\etw) line 64 : UCHAR EtwpDebuggerDataPattern[] = 
+infinityhook.c (Etw\etw) line 94 : // EtwpDebuggerData silos.
+infinityhook.c (Etw\etw) line 96 : #define OFFSET_ETW_DEBUGGER_DATA_SILO 0x10
+infinityhook.c (Etw\etw) line 114 : static const void* EtwpDebuggerData = NULL;
+infinityhook.c (Etw\etw) line 195 : 			   +0x040 BufferQueue      : _ETW_BUFFER_QUEUE
+infinityhook.c (Etw\etw) line 196 : 			   +0x050 OverflowQueue    : _ETW_BUFFER_QUEUE
+infinityhook.c (Etw\etw) line 199 : 			   +0x080 DecodeControlList : Ptr64 _ETW_DECODE_CONTROL_ENTRY
+infinityhook.c (Etw\etw) line 228 : 			   +0x140 ReferenceTime    : _ETW_REF_CLOCK
+infinityhook.c (Etw\etw) line 233 : 			   +0x170 TransitionConsumer : Ptr64 _ETW_REALTIME_CONSUMER
+infinityhook.c (Etw\etw) line 242 : 			   +0x1c0 RealtimeReferenceTime : _ETW_REF_CLOCK
+infinityhook.c (Etw\etw) line 243 : 			   +0x1d0 NewRTEventsLost  : _ETW_RT_EVENT_LOSS
+infinityhook.c (Etw\etw) line 296 : 			   +0x350 StackTraceBlock  : _ETW_STACK_TRACE_BLOCK
+infinityhook.c (Etw\etw) line 298 : 			   +0x3e0 StackCache       : Ptr64 _ETW_STACK_CACHE
+infinityhook.c (Etw\etw) line 299 : 			   +0x3e8 PmcData          : Ptr64 _ETW_PMC_SUPPORT
+infinityhook.c (Etw\etw) line 300 : 			   +0x3f0 LbrData          : Ptr64 _ETW_LBR_SUPPORT
+infinityhook.c (Etw\etw) line 301 : 			   +0x3f8 IptData          : Ptr64 _ETW_IPT_SUPPORT
+infinityhook.c (Etw\etw) line 308 : 			   +0x448 PeriodicCaptureStateTimerState : _ETW_PERIODIC_TIMER_STATE
+infinityhook.c (Etw\etw) line 309 : 			   +0x450 SoftRestartContext : Ptr64 _ETW_SOFT_RESTART_CONTEXT
+infinityhook.c (Etw\etw) line 310 : 			   +0x458 SiloState        : Ptr64 _ETW_SILODRIVERSTATE
+infinityhook.c (Etw\etw) line 319 : 			   +0x4ac CompressionResumptionMode : ETW_COMPRESSION_RESUMPTION_MODE
+infinityhook.c (Etw\etw) line 326 : 			   +0x518 CallbackContext  : Ptr64 _ETW_EVENT_CALLBACK_CONTEXT
+infinityhook.c (Etw\etw) line 336 : 	PVOID* AddressOfEtwpGetCycleCount = NULL;
+infinityhook.c (Etw\etw) line 339 : 	if(version.dwMajorVersion >6) AddressOfEtwpGetCycleCount = (PVOID*)((uintptr_t)CkclWmiLoggerContext + OFFSET_WMI_LOGGER_CONTEXT_CPU_CYCLE_CLOCK);
+infinityhook.c (Etw\etw) line 340 : 	else AddressOfEtwpGetCycleCount = (PVOID*)((uintptr_t)CkclWmiLoggerContext + 0x18);
+infinityhook.c (Etw\etw) line 343 : 	// is logged by ETW, it will invoke our new timing function.
+infinityhook.c (Etw\etw) line 346 : 	if (MmIsAddressValid(AddressOfEtwpGetCycleCount))
+infinityhook.c (Etw\etw) line 349 : 		*AddressOfEtwpGetCycleCount = IfhpInternalGetCpuClock;
+infinityhook.c (Etw\etw) line 381 : 	// We need to resolve nt!EtwpDebuggerData to get the current ETW
+infinityhook.c (Etw\etw) line 388 : 	NTSTATUS status = GetNtModuleBaseAndSizeEtw(&kernelBase, &kernelSize);
+infinityhook.c (Etw\etw) line 410 : 	// Look for the EtwpDebuggerData global using the signature. This 
+infinityhook.c (Etw\etw) line 413 : 	EtwpDebuggerData = MmSearchMemory(SectionBase, SizeOfSection, EtwpDebuggerDataPattern, RTL_NUMBER_OF(EtwpDebuggerDataPattern));
+infinityhook.c (Etw\etw) line 414 : 	if (!EtwpDebuggerData)
+infinityhook.c (Etw\etw) line 426 : 		EtwpDebuggerData = MmSearchMemory(SectionBase, SizeOfSection, EtwpDebuggerDataPattern, RTL_NUMBER_OF(EtwpDebuggerDataPattern));
+infinityhook.c (Etw\etw) line 427 : 		if (!EtwpDebuggerData)
+infinityhook.c (Etw\etw) line 436 : 	EtwpDebuggerData = (PVOID)((uintptr_t)EtwpDebuggerData - 2);
+infinityhook.c (Etw\etw) line 439 : 	// Get the silos of EtwpDebuggerData.
+infinityhook.c (Etw\etw) line 441 : 	PVOID* EtwpDebuggerDataSilo = *(PVOID**)((uintptr_t)EtwpDebuggerData + OFFSET_ETW_DEBUGGER_DATA_SILO);
+infinityhook.c (Etw\etw) line 446 : 	CkclWmiLoggerContext = EtwpDebuggerDataSilo[INDEX_CKCL_LOGGER];
+infinityhook.c (Etw\etw) line 468 : 		FindCodeEtw findCode[2] = { 0 };
+infinityhook.c (Etw\etw) line 469 : 		initFindCodeStructETW(&findCode[0], "48890d****48890d****48890d****48890d****488d0d****33d2488905****48893d****e8", 0, 0x3D);
+infinityhook.c (Etw\etw) line 470 : 		initFindCodeStructETW(&findCode[1], "418d5c**488d3d****488bc38d4b*f348ab", 0x38, 0x3D);
+infinityhook.c (Etw\etw) line 473 : 		if (!NT_SUCCESS(GetNtModuleBaseAndSizeEtw(&moduleAddr, &moduleSize)))
+infinityhook.c (Etw\etw) line 479 : 		fundAddr = findAddressByCodeETW(moduleAddr, moduleAddr + moduleSize, findCode, 2);
+infinityhook.c (Etw\etw) line 493 : 	PVOID* EtwpDebuggerDataSilo = (PVOID*)(addr.QuadPart);
+infinityhook.c (Etw\etw) line 494 : 	KdPrint(("找到结构%p\n", EtwpDebuggerDataSilo));
+infinityhook.c (Etw\etw) line 498 : 	CkclWmiLoggerContext = EtwpDebuggerDataSilo[INDEX_CKCL_LOGGER];
+infinityhook.c (Etw\etw) line 559 : 			Status = NtTraceControl(EtwpStartTrace, Property, PAGE_SIZE, Property, PAGE_SIZE, &ReturnLength);
+infinityhook.c (Etw\etw) line 564 : 			Status = NtTraceControl(EtwpStopTrace, Property, PAGE_SIZE, Property, PAGE_SIZE, &ReturnLength);
+infinityhook.c (Etw\etw) line 574 : 			Status = NtTraceControl(EtwpUpdateTrace, Property, PAGE_SIZE, Property, PAGE_SIZE, &ReturnLength);
+ntint.h (Etw\etw) line 19 : #define EtwpStartTrace		1
+ntint.h (Etw\etw) line 20 : #define EtwpStopTrace		2
+ntint.h (Etw\etw) line 21 : #define EtwpQueryTrace		3
+ntint.h (Etw\etw) line 22 : #define EtwpUpdateTrace		4
+ntint.h (Etw\etw) line 23 : #define EtwpFlushTrace		5
+tools.c (Etw\etw) line 25 : NTSTATUS GetNtModuleBaseAndSizeEtw(ULONG64 * pModule, ULONG64 * pSize)
+tools.c (Etw\etw) line 55 : UCHAR charToHexETW(UCHAR * ch)
+tools.c (Etw\etw) line 79 : void initFindCodeStructETW(PFindCodeEtw findCode, PCHAR code, ULONG64 offset, ULONG64 lastAddrOffset)
+tools.c (Etw\etw) line 82 : 	memset(findCode, 0, sizeof(FindCodeEtw));
+tools.c (Etw\etw) line 98 : 		findCode->code[i] = charToHexETW(pTemp);
+tools.c (Etw\etw) line 107 : ULONG64 findAddressByCodeETW(ULONG64 beginAddr, ULONG64 endAddr, PFindCodeEtw  findCode, ULONG size)
+tools.c (Etw\etw) line 119 : 			FindCodeEtw  fc = findCode[j];
+tools.c (Etw\etw) line 159 : ULONG GetWindowsVersionNumberEtw()
+tools.h (Etw\etw) line 465 : typedef struct _FindCodeEtw
+tools.h (Etw\etw) line 471 : }FindCodeEtw, *PFindCodeEtw;
+tools.h (Etw\etw) line 488 : ULONG GetWindowsVersionNumberEtw();
+tools.h (Etw\etw) line 490 : NTSTATUS GetNtModuleBaseAndSizeEtw(ULONG64 * pModule, ULONG64 * pSize);
+tools.h (Etw\etw) line 493 : void initFindCodeStructETW(PFindCodeEtw findCode, PCHAR code, ULONG64 offset, ULONG64 lastAddrOffset);
+tools.h (Etw\etw) line 494 : ULONG64 findAddressByCodeETW(ULONG64 beginAddr, ULONG64 endAddr, PFindCodeEtw  findCode, ULONG size);
+test__1.cpp (test__1) line 18 : 		tid = GetWindowThreadProcessId(queryhwnd, &pid);
+HookWindowApi.c (Windowprotected_ETWHOOK) line 28 : 	ULONG number = GetWindowsVersionNumber();
+HookWindowApi.c (Windowprotected_ETWHOOK) line 62 : 	ULONG number = GetWindowsVersionNumber();
+HookWindowApi.c (Windowprotected_ETWHOOK) line 84 : 	ULONG number = GetWindowsVersionNumber();
+HookWindowApi.c (Windowprotected_ETWHOOK) line 136 : 	ULONG number = GetWindowsVersionNumber();//获取windows版本号
+HookWindowApi.c (Windowprotected_ETWHOOK) line 157 : 	ULONG number = GetWindowsVersionNumber();
+HookWindowApi.c (Windowprotected_ETWHOOK) line 179 : 	ULONG number = GetWindowsVersionNumber();
+HookWindowApi.c (Windowprotected_ETWHOOK) line 200 : 	ULONG number = GetWindowsVersionNumber();
+HookWindowApi.c (Windowprotected_ETWHOOK) line 221 : 	ULONG number = GetWindowsVersionNumber();
+HookWindowApi.c (Windowprotected_ETWHOOK) line 226 : 		FuncName = "GetWindowLongW";
+MainDriver.c (Windowprotected_ETWHOOK) line 2 : #include "../Etw/etw/EtwControl.h"
+tools.c (Windowprotected_ETWHOOK) line 289 : ULONG GetWindowsVersionNumber()
+tools.h (Windowprotected_ETWHOOK) line 307 : ULONG GetWindowsVersionNumber();

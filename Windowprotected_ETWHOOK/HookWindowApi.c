@@ -323,9 +323,9 @@ ULONG_PTR GetUserWindowFromPoint()
 
 VOID InitHook()
 {
-	GetUserGetForegroundWindow();
-	GetUserFindWindowEx();
-	GetUserBuildHwndList();
+	GetUserGetForegroundWindow();//获取前置窗口hook
+	GetUserFindWindowEx();//获取查找窗口
+	GetUserBuildHwndList();//
 	GetUserQueryWindow();
 	GetUserWindowFromPoint();
 }
