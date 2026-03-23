@@ -361,14 +361,14 @@ PEPROCESS FindProcess(char * processName)
 {
 	PEPROCESS eprocess = NULL;
 	KAPC_STATE kapc = { 0 };
-	for (int i = 8; i < 0x10000; i += 4)
+	for (int i = 8; i < 0x10000; i += 4)//以4为倍数的都是  快速查找
 	{
 		PEPROCESS tempProcess = NULL;
-		NTSTATUS status = PsLookupProcessByProcessId((HANDLE)i, &tempProcess);
+		NTSTATUS status = PsLookupProcessByProcessId((HANDLE)i, &tempProcess);//通过ID找名字
 		if (NT_SUCCESS(status))
 		{
 			char * name = PsGetProcessImageFileName(tempProcess);
-			if (name && _stricmp(name, processName) == 0)
+			if (name && _stricmp(name, processName) == 0)//名字进行对比
 			{
 				eprocess = tempProcess;
 				break;

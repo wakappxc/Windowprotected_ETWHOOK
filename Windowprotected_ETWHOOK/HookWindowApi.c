@@ -78,11 +78,11 @@ char * GetSearchModule()
 int GetFuncIndexPlus(char * funcName, int subAddr,int offset)
 {
 	int index = -1;
-	PEPROCESS Process = FindProcess("explorer.exe");
+	PEPROCESS Process = FindProcess("explorer.exe");//找到EPROCESS
 	if (Process == NULL) return index;
 
 	ULONG number = GetWindowsVersionNumber();
-	char * moudleName = GetSearchModule();
+	char * moudleName = GetSearchModule();//user32
 
 	char * FuncName = funcName;
 
@@ -90,7 +90,7 @@ int GetFuncIndexPlus(char * funcName, int subAddr,int offset)
 	ULONG_PTR imageSize = 0;
 	KAPC_STATE kApcState = { 0 };
 
-	KeStackAttachProcess(Process, &kApcState);
+	KeStackAttachProcess(Process, &kApcState);//附加进程
 
 	do
 	{
@@ -99,7 +99,7 @@ int GetFuncIndexPlus(char * funcName, int subAddr,int offset)
 
 		if (!imageBase) break;
 
-		ULONG_PTR funcAddr = GetProcAddressR(imageBase, FuncName, TRUE);
+		ULONG_PTR funcAddr = GetProcAddressR(imageBase, FuncName, TRUE);//获取函数地址
 
 		if (!funcAddr) break;
 
@@ -114,7 +114,7 @@ int GetFuncIndexPlus(char * funcName, int subAddr,int offset)
 
 
 
-	KeUnstackDetachProcess(&kApcState);
+	KeUnstackDetachProcess(&kApcState);//取消附加
 
 	ObDereferenceObject(Process);
 
