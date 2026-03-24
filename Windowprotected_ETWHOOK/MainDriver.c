@@ -160,7 +160,7 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT pDriver, PUNICODE_STRING pReg)
 	//SSDTStruct* find = SSSDTFind();
 	IfhOn(HookCallback);
 	
-	ghwnd = (PVOID)0x00030186;
+	ghwnd = (PVOID)0x000201ac;
 	pDriver->DriverUnload = DriverUnload;
 	return STATUS_SUCCESS;
 }
